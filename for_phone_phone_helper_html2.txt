@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智慧型手機挑選助手 - 2026 全系列大全</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans TC', sans-serif; -webkit-font-smoothing: antialiased; scroll-behavior: auto !important; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .dragging { opacity: 0.5; background: #eff6ff !important; border: 2px dashed #3b82f6 !important; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 overflow-x-hidden min-h-screen">
+
+    <div id="app" class="max-w-4xl mx-auto p-4 md:p-8 flex flex-col items-center justify-center min-h-screen relative">
+        <!-- 內容由 JavaScript 動態生成 -->
+    </div>
+
+    <script>
+        // 原始資料庫 (32款機型)
+        let phones = [
+            { id: 1701, name: "iPhone 17 Pro Max", brand: "Apple", os: "iOS", price: 49900, condition: "new", isVisible: true, strengths: ["photography", "gaming", "battery"], description: "2026 頂規機皇，鈦金屬 2.0 與全新 24MP 前鏡頭。", specs: { display: "6.9 吋 OLED", camera: "48MP 四鏡頭", battery: "續航王者" } },
+            { id: 1702, name: "iPhone 17 Pro", brand: "Apple", os: "iOS", price: 43900, condition: "new", isVisible: true, strengths: ["photography", "portability"], description: "最強性能的小鋼炮，搭載 A19 Pro 晶片。", specs: { display: "6.3 吋 OLED", camera: "48MP 三鏡頭", battery: "全天候" } },
+            { id: 1703, name: "iPhone 17 Air", brand: "Apple", os: "iOS", price: 38900, condition: "new", isVisible: true, strengths: ["portability", "design"], description: "取代 Plus 的全新超薄型號，極致美學與輕盈手感。", specs: { display: "6.6 吋超薄面板", camera: "48MP 單鏡", battery: "輕薄長效" } },
+            { id: 1705, name: "iPhone 17", brand: "Apple", os: "iOS", price: 31900, condition: "new", isVisible: true, strengths: ["portability", "value"], description: "當季大眾首選，支援 ProMotion 120Hz。", specs: { display: "6.3 吋 OLED", camera: "48MP 雙鏡頭", battery: "穩定續航" } },
+            { id: 1706, name: "iPhone 17e", brand: "Apple", os: "iOS", price: 23900, condition: "new", isVisible: true, strengths: ["value", "portability"], description: "取代 SE 系列的平價首選，小資族首選。", specs: { display: "6.1 吋 OLED", camera: "48MP 單鏡", battery: "日常實用" } },
+            { id: 1601, name: "iPhone 16 Pro Max (二手)", brand: "Apple", os: "iOS", price: 26500, condition: "used", isVisible: true, strengths: ["photography", "battery"], description: "前代大螢幕機皇，二手行情極佳。", specs: { display: "6.9 吋", camera: "48MP 三鏡", battery: "長效" } },
+            { id: 1602, name: "iPhone 16 Pro (二手)", brand: "Apple", os: "iOS", price: 22500, condition: "used", isVisible: true, strengths: ["photography", "portability"], description: "具備動作按鈕與強悍效能。", specs: { display: "6.3 吋", camera: "48MP 三鏡", battery: "全天" } },
+            { id: 1603, name: "iPhone 16 Plus (二手)", brand: "Apple", os: "iOS", price: 18500, condition: "used", isVisible: true, strengths: ["battery"], description: "最後一隻 Plus 機型，電力表現優異。", specs: { display: "6.7 吋", camera: "48MP 雙鏡", battery: "極長續航" } },
+            { id: 1604, name: "iPhone 16 (二手)", brand: "Apple", os: "iOS", price: 16500, condition: "used", isVisible: true, strengths: ["value", "portability"], description: "基礎動作按鈕款。", specs: { display: "6.1 吋", camera: "48MP", battery: "穩定" } },
+            { id: 1501, name: "iPhone 15 Pro Max (二手)", brand: "Apple", os: "iOS", price: 21500, condition: "used", isVisible: true, strengths: ["photography"], description: "首款鈦金屬與 USB-C。", specs: { display: "6.7 吋", camera: "5倍光變", battery: "穩定" } },
+            { id: 1504, name: "iPhone 15 Pro (二手)", brand: "Apple", os: "iOS", price: 18500, condition: "used", isVisible: true, strengths: ["portability"], description: "高效能 Pro 二手機選。", specs: { display: "6.1 吋", camera: "三鏡頭", battery: "足夠" } },
+            { id: 1502, name: "iPhone 15 Plus (二手)", brand: "Apple", os: "iOS", price: 14500, condition: "used", isVisible: true, strengths: ["battery"], description: "實惠大螢幕選。", specs: { display: "6.7 吋", camera: "48MP", battery: "長效" } },
+            { id: 1503, name: "iPhone 15 (二手)", brand: "Apple", os: "iOS", price: 12500, condition: "used", isVisible: true, strengths: ["value"], description: "USB-C 入門首選。", specs: { display: "6.1 吋", camera: "48MP", battery: "日常" } },
+            { id: 1401, name: "iPhone 14 Pro Max (二手)", brand: "Apple", os: "iOS", price: 15500, condition: "used", isVisible: true, strengths: ["photography"], description: "首款動態島機皇。", specs: { display: "6.7 吋", camera: "48MP 三鏡", battery: "長效" } },
+            { id: 1404, name: "iPhone 14 (二手)", brand: "Apple", os: "iOS", price: 9500, condition: "used", isVisible: true, strengths: ["value"], description: "成熟穩定的基礎款。", specs: { display: "6.1 吋", camera: "12MP", battery: "日常" } },
+            { id: 1301, name: "iPhone 13 Pro Max (二手)", brand: "Apple", os: "iOS", price: 10000, condition: "used", isVisible: true, strengths: ["battery"], description: "經典 120Hz 大螢幕。", specs: { display: "6.7 吋", camera: "三鏡頭", battery: "極長" } },
+            { id: 1302, name: "iPhone 13 Pro (二手)", brand: "Apple", os: "iOS", price: 9000, condition: "used", isVisible: true, strengths: ["photography"], description: "120Hz 體驗最低門檻。", specs: { display: "6.1 吋", camera: "三鏡頭", battery: "一般" } },
+            { id: 1303, name: "iPhone 13 (二手)", brand: "Apple", os: "iOS", price: 7500, condition: "used", isVisible: true, strengths: ["value"], description: "目前的國民二手機選。", specs: { display: "6.1 吋", camera: "12MP", battery: "穩定" } },
+            { id: 1304, name: "iPhone 13 mini (二手)", brand: "Apple", os: "iOS", price: 8500, condition: "used", isVisible: true, strengths: ["portability"], description: "最後一隻小尺寸 mini 旗艦。", specs: { display: "5.4 吋", camera: "12MP", battery: "日常" } },
+            { id: 1203, name: "iPhone 12 (二手)", brand: "Apple", os: "iOS", price: 5500, condition: "used", isVisible: true, strengths: ["value"], description: "5G 入門最實惠 iOS。", specs: { display: "6.1 吋", camera: "12MP", battery: "一般" } },
+            { id: 1103, name: "iPhone 11 (二手)", brand: "Apple", os: "iOS", price: 3500, condition: "used", isVisible: true, strengths: ["value"], description: "極致省錢 iOS 方案。", specs: { display: "6.1 吋 LCD", camera: "12MP", battery: "日常" } },
+            { id: 2601, name: "Samsung Galaxy S26 Ultra", brand: "Samsung", os: "Android", price: 46900, condition: "new", isVisible: true, strengths: ["photography", "gaming", "productivity"], description: "2026 Android 巔峰，AI 筆寫技術。", specs: { display: "6.8 吋 QHD+", camera: "200MP", battery: "5500mAh" } },
+            { id: 2602, name: "Samsung Galaxy S26+", brand: "Samsung", os: "Android", price: 37900, condition: "new", isVisible: true, strengths: ["battery"], description: "全方位大螢幕旗艦。", specs: { display: "6.7 吋", camera: "50MP", battery: "5200mAh" } },
+            { id: 2603, name: "Samsung Galaxy S26", brand: "Samsung", os: "Android", price: 29900, condition: "new", isVisible: true, strengths: ["portability"], description: "強悍的小尺寸旗艦。", specs: { display: "6.1 吋", camera: "50MP", battery: "4200mAh" } },
+            { id: 2501, name: "Samsung Galaxy S25 Ultra (二手)", brand: "Samsung", os: "Android", price: 28500, condition: "used", isVisible: true, strengths: ["photography"], description: "極致窄邊框變焦王。", specs: { display: "6.8 吋", camera: "專業變焦", battery: "長效" } },
+            { id: 2504, name: "Samsung Galaxy S25 Edge (二手)", brand: "Samsung", os: "Android", price: 21500, condition: "used", isVisible: true, strengths: ["design"], description: "美型曲面螢幕設計。", specs: { display: "6.5 吋 Edge", camera: "50MP", battery: "4700mAh" } },
+            { id: 2502, name: "Samsung Galaxy S25+ (二手)", brand: "Samsung", os: "Android", price: 19500, condition: "used", isVisible: true, strengths: ["battery"], description: "前代大電量優質選。", specs: { display: "6.7 吋", camera: "50MP", battery: "4900mAh" } },
+            { id: 2401, name: "Samsung Galaxy S24 Ultra (二手)", brand: "Samsung", os: "Android", price: 16500, condition: "used", isVisible: true, strengths: ["photography", "productivity"], description: "鈦金屬經典筆寫機。", specs: { display: "6.8 吋 平面", camera: "200MP", battery: "5000mAh" } },
+            { id: 2301, name: "Samsung Galaxy S23 Ultra (二手)", brand: "Samsung", os: "Android", price: 12500, condition: "used", isVisible: true, strengths: ["photography"], description: "高畫質長焦與 S Pen。", specs: { display: "6.8 吋", camera: "100倍變焦", battery: "5000mAh" } },
+            { id: 2510, name: "Samsung Galaxy A56 5G", brand: "Samsung", os: "Android", price: 13990, condition: "new", isVisible: true, strengths: ["value"], description: "國民平衡中階機。", specs: { display: "6.6 吋 120Hz", camera: "50MP", battery: "5000mAh" } },
+            { id: 3001, name: "Vivo X200 Pro", brand: "Vivo", os: "Android", price: 36900, condition: "new", isVisible: true, strengths: ["photography", "gaming"], description: "蔡司光學影像大師。", specs: { display: "6.78 吋 2K", camera: "蔡司 APO", battery: "5800mAh" } },
+            { id: 3010, name: "Vivo Y300 Pro", brand: "Vivo", os: "Android", price: 10900, condition: "new", isVisible: true, strengths: ["battery"], description: "6500mAh 續航怪獸。", specs: { display: "6.7 吋", camera: "50MP", battery: "6500mAh" } }
+        ];
+
+        let state = {
+            currentStep: 0,
+            selections: { condition: '', budget: '', os: '', priority: '' },
+            isFinished: false,
+            isAdmin: false,
+            showInventory: false,
+            editingId: null,
+            draggedIndex: null
+        };
+
+        const STEPS = [
+            { id: 'condition', title: '您想要的購買狀態？', description: '全新機保固完整；二手機則能用更低的價格買到高性能。', options: [
+                { value: 'new', label: '全新未拆', icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4' },
+                { value: 'used', label: '二手/福利機', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' }
+            ]},
+            { id: 'budget', title: '您的購機預算？', description: '我們會根據 2026 市場行情為您過濾。', options: [
+                { value: 'all', label: '不限預算', icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
+                { value: 'high', label: '30,000 以上', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+                { value: 'mid', label: '15,000 - 30,000', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+                { value: 'budget', label: '15,000 以下', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' }
+            ]},
+            { id: 'os', title: '偏好的作業系統？', options: [
+                { value: 'no-pref', label: '皆可', icon: 'M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z' },
+                { value: 'iOS', label: 'iOS (Apple)', icon: 'M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z' },
+                { value: 'Android', label: 'Android', icon: 'M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z' }
+            ]},
+            { id: 'priority', title: '您的核心需求？', options: [
+                { value: 'photography', label: '拍照錄影', icon: 'M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z' },
+                { value: 'gaming', label: '遊戲效能', icon: 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v12a2 2 0 002 2z' },
+                { value: 'portability', label: '輕巧手感', icon: 'M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4-1.4l-1.6-1.6a1 1 0 00-1.4 0zM7.7 16.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4-1.4l-1.6-1.6a1 1 0 00-1.4 0z' },
+                { value: 'battery', label: '長效續航', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2zM7 9h10' }
+            ]}
+        ];
+
+        // 重新渲染函數 (確保全局可訪問)
+        window.render = function() {
+            const pageY = window.pageYOffset || document.documentElement.scrollTop;
+            const adminListEl = document.getElementById('admin-list');
+            const adminScrollY = adminListEl ? adminListEl.scrollTop : 0;
+
+            const root = document.getElementById('app');
+            root.innerHTML = '';
+
+            if (state.isAdmin) {
+                renderAdmin(root);
+                const newAdminList = document.getElementById('admin-list');
+                if (newAdminList) newAdminList.scrollTop = adminScrollY;
+            } else {
+                renderUserUI(root);
+            }
+
+            window.scrollTo(0, pageY);
+        };
+
+        function renderUserUI(root) {
+            // 優化 Header 結構以防遮擋
+            const header = document.createElement('header');
+            header.className = 'w-full mb-10 flex flex-col items-center gap-4 relative';
+            header.innerHTML = `
+                <div class="w-full flex justify-end md:absolute md:top-0 md:right-0">
+                    <button type="button" onclick="toggleInventory(true)" class="flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 rounded-[20px] text-[11px] font-black text-slate-500 hover:text-blue-600 hover:border-blue-200 transition-all active:scale-95 shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg> 瀏覽完整清單
+                    </button>
+                </div>
+                <div class="text-center">
+                    <h1 class="text-4xl md:text-5xl font-black text-blue-600 mb-2 flex items-center justify-center gap-3 tracking-tighter">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> 智慧手機挑選助手
+                    </h1>
+                    <p class="text-slate-400 font-bold text-sm tracking-widest uppercase">Comprehensive 2026 Collection</p>
+                </div>
+            `;
+            root.appendChild(header);
+
+            const main = document.createElement('main');
+            main.className = 'bg-white w-full rounded-[48px] shadow-2xl border border-slate-100 overflow-hidden min-h-[580px] flex flex-col fade-in';
+            
+            if (!state.isFinished) {
+                const step = STEPS[state.currentStep];
+                main.innerHTML = `
+                    <div class="p-8 md:p-12 flex-1 flex flex-col">
+                        <div class="flex justify-between items-center mb-12">
+                            <div class="flex gap-2">
+                                ${STEPS.map((_, i) => `<div class="h-1.5 w-12 rounded-full transition-all duration-500 ${i <= state.currentStep ? 'bg-blue-600' : 'bg-slate-100'}"></div>`).join('')}
+                            </div>
+                            <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">STEP ${state.currentStep + 1}/4</span>
+                        </div>
+                        <div class="mb-12 text-center md:text-left">
+                            <h2 class="text-3xl font-black mb-3 text-slate-800 leading-tight">${step.title}</h2>
+                            <p class="text-slate-400 text-sm font-medium leading-relaxed">${step.description || ''}</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
+                            ${step.options.map(opt => `
+                                <button type="button" onclick="selectOption('${step.id}', '${opt.value}')" class="p-7 text-left rounded-[32px] border-2 transition-all group flex items-center gap-6 border-slate-50 hover:border-blue-500 hover:bg-blue-50/30 active:scale-95 shadow-sm">
+                                    <div class="p-4 rounded-2xl bg-slate-50 text-slate-400 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm shrink-0">
+                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${opt.icon}"></path></svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="font-black text-xl leading-tight mb-1 text-slate-700 break-words whitespace-normal">${opt.label}</div>
+                                    </div>
+                                </button>
+                            `).join('')}
+                        </div>
+                        <div class="mt-8 pt-8 border-t border-slate-50">
+                            <button type="button" onclick="goBack()" ${state.currentStep === 0 ? 'disabled' : ''} class="flex items-center gap-2 px-6 py-2.5 rounded-[20px] text-xs font-black transition-all ${state.currentStep === 0 ? 'text-slate-100' : 'text-slate-400 hover:text-blue-600 hover:bg-blue-50'}">
+                                ← 上一步
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                renderResults(main);
+            }
+            root.appendChild(main);
+
+            if (state.showInventory) renderInventoryModal(root);
+        }
+
+        function renderResults(container) {
+            const filtered = phones.filter(p => {
+                if (!p.isVisible) return false;
+                if (state.selections.condition && p.condition !== state.selections.condition) return false;
+                if (state.selections.budget === 'high' && p.price < 30000) return false;
+                if (state.selections.budget === 'mid' && (p.price < 15000 || p.price >= 30000)) return false;
+                if (state.selections.budget === 'budget' && p.price >= 15000) return false;
+                if (state.selections.os !== 'no-pref' && p.os !== state.selections.os) return false;
+                return true;
+            }).sort((a, b) => {
+                const aScore = a.strengths.includes(state.selections.priority) ? 1 : 0;
+                const bScore = b.strengths.includes(state.selections.priority) ? 1 : 0;
+                return bScore - aScore;
+            });
+
+            container.innerHTML = `
+                <div class="p-8 md:p-12 flex-1 flex flex-col">
+                    <div class="flex items-center justify-between mb-10 pb-6 border-b border-slate-50 gap-4">
+                        <div class="flex-1 min-w-0">
+                            <h2 class="text-3xl font-black text-slate-800 tracking-tight">推薦結果</h2>
+                            <p class="text-slate-400 text-[11px] font-black mt-1 uppercase tracking-[0.2em]">根據庫存順序與需求即時匹配</p>
+                        </div>
+                        <button type="button" onclick="resetApp()" class="p-4 text-slate-200 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all shadow-sm shrink-0">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 gap-6 max-h-[500px] overflow-y-auto pr-3 custom-scrollbar flex-1">
+                        ${filtered.length > 0 ? filtered.map((p, i) => `
+                            <div class="p-8 border-2 rounded-[40px] transition-all hover:shadow-2xl ${i === 0 ? 'border-blue-600 ring-8 ring-blue-50 bg-white shadow-xl' : 'border-slate-50 bg-white'}">
+                                <div class="flex flex-col md:flex-row gap-8">
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex flex-wrap items-center gap-2 mb-4">
+                                            <span class="px-3 py-1 text-[9px] font-black rounded-lg uppercase tracking-widest ${p.condition === 'new' ? 'bg-emerald-100 text-emerald-700' : 'bg-orange-100 text-orange-700'}">${p.condition === 'new' ? '全新機' : '二手福利'}</span>
+                                            <span class="px-3 py-1 bg-slate-100 text-slate-400 text-[9px] font-black rounded-lg uppercase tracking-widest">${p.brand}</span>
+                                            ${i === 0 ? '<span class="px-3 py-1 bg-blue-600 text-white text-[9px] font-black rounded-lg flex items-center gap-1.5 uppercase tracking-widest shadow-md">編輯首選</span>' : ''}
+                                        </div>
+                                        <h3 class="text-2xl font-black mb-2 text-slate-800 tracking-tight break-words whitespace-normal leading-tight">${p.name}</h3>
+                                        <p class="text-slate-500 text-sm mb-6 leading-relaxed font-bold break-words whitespace-normal">${p.description}</p>
+                                        <div class="flex flex-wrap gap-5 text-[10px] text-slate-400 font-black tracking-widest uppercase">
+                                            <span class="flex items-center gap-2 min-w-0"><svg class="w-4 h-4 shrink-0 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg><span class="break-words">${p.specs.display}</span></span>
+                                            <span class="flex items-center gap-2 min-w-0"><svg class="w-4 h-4 shrink-0 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg><span class="break-words">${p.specs.camera}</span></span>
+                                            <span class="flex items-center gap-2 min-w-0"><svg class="w-4 h-4 shrink-0 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg><span class="break-words">${p.specs.battery}</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="md:w-56 flex flex-col justify-center items-center md:items-end border-t md:border-t-0 md:border-l border-slate-100 pt-6 md:pt-0 md:pl-10 shrink-0">
+                                        <div class="text-[10px] text-slate-300 font-black uppercase mb-1 tracking-widest">2026 行情價</div>
+                                        <div class="text-4xl font-black text-blue-600 mb-6 tracking-tighter">NT$ ${p.price.toLocaleString()}</div>
+                                        <button type="button" class="w-full bg-slate-900 text-white px-6 py-4 rounded-[24px] text-xs font-black hover:bg-blue-600 shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-2">門市現貨查詢</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('') : `
+                            <div class="text-center py-24 bg-slate-50 rounded-[48px] border-4 border-dashed border-slate-100">
+                                <svg class="mx-auto text-slate-200 mb-5 w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <h3 class="text-xl font-black text-slate-300 uppercase tracking-tighter">No Match Found</h3>
+                                <p class="text-slate-400 text-xs px-16 font-bold mt-3 leading-relaxed">找不到匹配機型。請確認後台是否有隱藏機型或調整預算篩選。</p>
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderInventoryModal(root) {
+            const visiblePhones = phones.filter(p => p.isVisible);
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 flex items-center justify-center p-4';
+            modal.innerHTML = `
+                <div class="bg-white w-full max-w-4xl rounded-[40px] shadow-2xl max-h-[85vh] overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-300">
+                    <div class="p-8 border-b border-slate-100 flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="p-2.5 bg-blue-50 text-blue-600 rounded-2xl shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></div>
+                            <h3 class="text-2xl font-black text-slate-800 truncate">手機庫存清單 (${visiblePhones.length} 款)</h3>
+                        </div>
+                        <button type="button" onclick="toggleInventory(false)" class="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400 shrink-0"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                    </div>
+                    <div class="p-8 overflow-y-auto flex-1 custom-scrollbar space-y-8 bg-slate-50/30">
+                        ${['Apple', 'Samsung', 'Vivo'].map(brand => `
+                            <div>
+                                <h4 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4 border-b pb-2">${brand} Series</h4>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    ${phones.filter(p => p.brand === brand && p.isVisible).map(p => `
+                                        <div class="flex items-center justify-between p-4 bg-white rounded-[24px] shadow-sm border border-slate-100 gap-3">
+                                            <div class="min-w-0 flex-1">
+                                                <div class="font-bold text-slate-800 text-sm break-words whitespace-normal leading-tight">${p.name}</div>
+                                                <div class="text-[9px] font-black tracking-wider ${p.condition === 'new' ? 'text-emerald-500' : 'text-orange-500'} mt-1">${p.condition.toUpperCase()}</div>
+                                            </div>
+                                            <div class="text-blue-600 font-black text-sm whitespace-nowrap shrink-0">NT$${p.price.toLocaleString()}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="p-8 bg-white border-t border-slate-100">
+                        <button type="button" onclick="enterAdmin()" class="w-full flex items-center justify-center gap-3 py-5 bg-slate-900 text-white rounded-[24px] font-black hover:bg-blue-600 transition-all shadow-2xl">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            進入管理後台
+                        </button>
+                    </div>
+                </div>
+            `;
+            root.appendChild(modal);
+        }
+
+        function renderAdmin(root) {
+            const visibleCount = phones.filter(p => p.isVisible).length;
+            root.innerHTML = `
+                <div class="w-full flex flex-col gap-6 tracking-tight">
+                    <div class="flex items-center justify-between bg-white p-6 rounded-3xl shadow-sm border border-slate-200 gap-4">
+                        <div class="flex items-center gap-4 min-w-0 flex-1">
+                            <div class="p-3 bg-blue-600 text-white rounded-2xl shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div>
+                            <div class="min-w-0 flex-1">
+                                <h1 class="text-2xl font-black text-slate-800 break-words whitespace-normal leading-tight">後台管理面板</h1>
+                                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mt-1">Inventory Management</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="exitAdmin()" class="shrink-0 flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-2xl text-sm font-black hover:bg-blue-600 transition-all shadow-xl">返回助手前台</button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-[32px] shadow-sm border border-slate-200 h-fit">
+                            <h2 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-2 text-blue-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> 快速新增機型</h2>
+                            <div class="space-y-4">
+                                <input id="new-name" type="text" placeholder="手機名稱" class="w-full bg-slate-50 border-none rounded-xl p-3 font-bold text-sm focus:ring-2 focus:ring-blue-500">
+                                <div class="grid grid-cols-2 gap-3">
+                                    <select id="new-brand" class="w-full bg-slate-50 border-none rounded-xl p-3 font-bold text-sm">
+                                        <option value="Apple">Apple</option><option value="Samsung">Samsung</option><option value="Vivo">Vivo</option>
+                                    </select>
+                                    <select id="new-condition" class="w-full bg-slate-50 border-none rounded-xl p-3 font-bold text-sm">
+                                        <option value="new">全新機</option><option value="used">二手機</option>
+                                    </select>
+                                </div>
+                                <input id="new-price" type="number" placeholder="價格" class="w-full bg-slate-50 border-none rounded-xl p-3 font-bold text-blue-600 text-sm">
+                                <textarea id="new-desc" placeholder="描述" class="w-full bg-slate-50 border-none rounded-xl p-3 font-bold min-h-[80px] text-sm"></textarea>
+                                <button type="button" onclick="addNewPhone()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black shadow-lg hover:bg-blue-700 transition-all active:scale-95">確認加入</button>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-2 bg-white p-6 rounded-[32px] shadow-sm border border-slate-200">
+                            <h2 class="text-lg font-black text-slate-800 mb-6 break-words whitespace-normal leading-tight">資料庫管理 (${phones.length}款機型，目前顯示：${visibleCount}台)</h2>
+                            <div id="admin-list" class="space-y-3 max-h-[750px] overflow-y-auto pr-2 custom-scrollbar">
+                                ${phones.map((p, index) => renderAdminItem(p, index)).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            initDragAndDrop();
+        }
+
+        function renderAdminItem(p, index) {
+            const isEditing = state.editingId === p.id;
+            return `
+                <div id="item-${p.id}" 
+                    class="flex flex-col gap-4 p-5 rounded-[28px] transition-all border group ${isEditing ? 'border-blue-500 bg-blue-50/30 ring-4 ring-blue-50' : 'bg-slate-50 border-transparent hover:bg-white hover:shadow-lg cursor-grab active:cursor-grabbing'}"
+                    draggable="${!isEditing}"
+                    data-index="${index}"
+                    ondblclick="setEditing(${p.id})"
+                >
+                    ${isEditing ? `
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest">編輯模式中...</span>
+                                <button type="button" onclick="saveEdit(${p.id})" class="p-2 bg-blue-600 text-white rounded-xl text-xs font-bold px-4 hover:bg-blue-700 active:scale-95">儲存</button>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <input id="edit-name-${p.id}" type="text" value="${p.name}" class="w-full bg-white rounded-xl p-2.5 text-sm font-bold border focus:ring-2 focus:ring-blue-400">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <select id="edit-brand-${p.id}" class="bg-white rounded-xl p-2.5 text-xs font-bold border">
+                                        <option value="Apple" ${p.brand === 'Apple' ? 'selected' : ''}>Apple</option>
+                                        <option value="Samsung" ${p.brand === 'Samsung' ? 'selected' : ''}>Samsung</option>
+                                        <option value="Vivo" ${p.brand === 'Vivo' ? 'selected' : ''}>Vivo</option>
+                                    </select>
+                                    <select id="edit-cond-${p.id}" class="bg-white rounded-xl p-2.5 text-xs font-bold border">
+                                        <option value="new" ${p.condition === 'new' ? 'selected' : ''}>全新</option>
+                                        <option value="used" ${p.condition === 'used' ? 'selected' : ''}>二手</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-3">
+                                <input id="edit-price-${p.id}" type="number" value="${p.price}" class="col-span-1 bg-white rounded-xl p-2.5 text-sm font-bold text-blue-600 border focus:ring-2 focus:ring-blue-400">
+                                <textarea id="edit-desc-${p.id}" class="col-span-2 bg-white rounded-xl p-2.5 text-xs font-bold border min-h-[60px] focus:ring-2 focus:ring-blue-400">${p.description}</textarea>
+                            </div>
+                        </div>
+                    ` : `
+                        <div class="flex items-center gap-4">
+                            <div class="text-slate-300 drag-handle shrink-0"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M7 7h2v2H7V7zm0 4h2v2H7v-2zm0 4h2v2H7v-2zm4-8h2v2h-2V7zm0 4h2v2h-2v-2zm0 4h2v2h-2v-2z"></path></svg></div>
+                            <div class="p-3 rounded-2xl shrink-0 ${p.condition === 'new' ? 'bg-emerald-100 text-emerald-600' : 'bg-orange-100 text-orange-600'}">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <div class="flex-1 min-w-0 pr-2">
+                                <div class="font-black text-slate-800 text-base break-words whitespace-normal leading-tight">${p.name}</div>
+                                <div class="text-[10px] text-slate-400 font-bold uppercase flex flex-wrap gap-2 mt-1">
+                                    <span>${p.brand}</span> • <span>${p.condition === 'new' ? '全新' : '二手'}</span> • <span>NT$ ${p.price.toLocaleString()}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1 shrink-0">
+                                <button type="button" onclick="togglePhoneVisibility(${p.id})" class="p-2.5 rounded-xl transition-all ${p.isVisible ? 'text-blue-500 hover:bg-blue-100' : 'text-red-500 bg-red-100'}">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${p.isVisible ? 'M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z' : 'M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18'}"></path></svg>
+                                </button>
+                                <button type="button" onclick="deletePhone(${p.id})" class="p-2.5 text-slate-300 hover:text-white hover:bg-red-500 rounded-xl transition-all">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    `}
+                </div>
+            `;
+        }
+
+        // 行政邏輯 (確保全局可訪問)
+        window.enterAdmin = function() { state.isAdmin = true; state.showInventory = false; window.render(); };
+        window.exitAdmin = function() { state.isAdmin = false; window.render(); };
+        window.setEditing = function(id) { state.editingId = id; window.render(); };
+        window.toggleInventory = function(show) { state.showInventory = show; window.render(); };
+        
+        window.saveEdit = function(id) {
+            const p = phones.find(x => x.id === id);
+            if (!p) return;
+            p.name = document.getElementById(`edit-name-${id}`).value;
+            p.brand = document.getElementById(`edit-brand-${id}`).value;
+            p.condition = document.getElementById(`edit-cond-${id}`).value;
+            p.price = parseInt(document.getElementById(`edit-price-${id}`).value) || 0;
+            p.description = document.getElementById(`edit-desc-${id}`).value;
+            state.editingId = null;
+            window.render();
+        };
+
+        window.togglePhoneVisibility = function(id) {
+            const p = phones.find(x => x.id === id);
+            if (p) p.isVisible = !p.isVisible;
+            window.render();
+        };
+
+        window.deletePhone = function(id) {
+            phones = phones.filter(p => p.id !== id);
+            window.render();
+        };
+
+        window.selectOption = function(stepId, value) {
+            state.selections[stepId] = value;
+            if (state.currentStep < STEPS.length - 1) {
+                state.currentStep++;
+            } else {
+                state.isFinished = true;
+            }
+            window.render();
+        };
+
+        window.goBack = function() {
+            if (state.currentStep > 0) {
+                state.currentStep--;
+                window.render();
+            }
+        };
+
+        window.addNewPhone = function() {
+            const name = document.getElementById('new-name').value;
+            const price = parseInt(document.getElementById('new-price').value);
+            if (!name || isNaN(price)) return;
+            phones.unshift({
+                id: Date.now(),
+                name,
+                brand: document.getElementById('new-brand').value,
+                os: document.getElementById('new-brand').value === 'Apple' ? 'iOS' : 'Android',
+                price,
+                condition: document.getElementById('new-condition').value,
+                description: document.getElementById('new-desc').value || '新加入機型',
+                isVisible: true,
+                strengths: ['value'],
+                specs: { display: '6.7 吋', camera: '48MP', battery: '5000mAh' }
+            });
+            window.render();
+        };
+
+        window.resetApp = function() {
+            state.currentStep = 0;
+            state.isFinished = false;
+            state.selections = { condition: '', budget: '', os: '', priority: '' };
+            window.render();
+        };
+
+        // 排序
+        function initDragAndDrop() {
+            const list = document.getElementById('admin-list');
+            if (!list) return;
+            const items = list.querySelectorAll('[draggable="true"]');
+            
+            items.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    state.draggedIndex = parseInt(item.getAttribute('data-index'));
+                    item.classList.add('dragging');
+                });
+                item.addEventListener('dragend', () => item.classList.remove('dragging'));
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    const afterElement = getDragAfterElement(list, e.clientY);
+                    const draggingItem = document.querySelector('.dragging');
+                    if (draggingItem) {
+                        if (afterElement == null) list.appendChild(draggingItem);
+                        else list.insertBefore(draggingItem, afterElement);
+                    }
+                });
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const newOrder = Array.from(list.children).map(el => {
+                        const idx = parseInt(el.getAttribute('data-index'));
+                        return phones[idx];
+                    });
+                    phones = newOrder;
+                    window.render();
+                });
+            });
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('[draggable="true"]:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        window.onload = window.render;
+    </script>
+</body>
+</html>
