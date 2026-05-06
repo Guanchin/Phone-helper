@@ -103,7 +103,7 @@
                 { value: 'photography', label: '拍照錄影', icon: 'M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z' },
                 { value: 'gaming', label: '遊戲效能', icon: 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v12a2 2 0 002 2z' },
                 { value: 'portability', label: '輕巧手感', icon: 'M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4-1.4l-1.6-1.6a1 1 0 00-1.4 0zM7.7 16.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4-1.4l-1.6-1.6a1 1 0 00-1.4 0z' },
-                { value: 'battery', label: '長效續航', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2zM7 9h10' }
+                { value: 'battery', label: '長效續營', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2zM7 9h10' }
             ]}
         ];
 
@@ -325,6 +325,15 @@
                                 <textarea id="new-desc" placeholder="描述" class="w-full bg-slate-50 border-none rounded-xl p-3 font-bold min-h-[80px] text-sm"></textarea>
                                 <button type="button" onclick="addNewPhone()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black shadow-lg hover:bg-blue-700 transition-all active:scale-95">確認加入</button>
                             </div>
+                            
+                            <hr class="my-8 border-slate-100">
+                            
+                            <h2 class="text-sm font-black text-slate-800 mb-4 flex items-center gap-2 uppercase tracking-widest"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m.493 3.049c.229.49.323 1.032.323 1.593a4.5 4.5 0 01-4.5 4.5h-1a4.5 4.5 0 01-4.5-4.5V3.5A4.5 4.5 0 014.5-1h1a4.5 4.5 0 014.5 4.5c0 .561-.094 1.103-.323 1.593m4.823 4.249A4.5 4.5 0 0115 12a4.5 4.5 0 01-4.5 4.5h-1a4.5 4.5 0 01-4.5-4.5V3.5A4.5 4.5 0 0110.5-1h1a4.5 4.5 0 014.5 4.5c0 .561-.094 1.103-.323 1.593m-1.14 6.05a9 9 0 01-1.414 1.414"></path></svg> 分享與備份設定</h2>
+                            <p class="text-[10px] text-slate-400 mb-4 font-bold">您可以將調整好的設定匯出給朋友，或是貼上匯入代碼來套用設定。</p>
+                            <div class="flex gap-2">
+                                <button type="button" onclick="exportData()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-[10px] font-black transition-all">複製設定代碼</button>
+                                <button type="button" onclick="importDataPrompt()" class="flex-1 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-xl text-[10px] font-black transition-all">匯入設定</button>
+                            </div>
                         </div>
 
                         <div class="lg:col-span-2 bg-white p-6 rounded-[32px] shadow-sm border border-slate-200">
@@ -399,7 +408,7 @@
             `;
         }
 
-        // --- 全局函數 (提供 HTML 事件調用) ---
+        // 行政邏輯
         window.enterAdmin = function() { state.isAdmin = true; state.showInventory = false; window.render(); };
         window.exitAdmin = function() { state.isAdmin = false; window.render(); };
         window.setEditing = function(id) { state.editingId = id; window.render(); };
@@ -414,20 +423,20 @@
             p.price = parseInt(document.getElementById(`edit-price-${id}`).value) || 0;
             p.description = document.getElementById(`edit-desc-${id}`).value;
             state.editingId = null;
-            saveToLocal(); // 同步儲存
+            saveToLocal();
             window.render();
         };
 
         window.togglePhoneVisibility = function(id) {
             const p = phones.find(x => x.id === id);
             if (p) p.isVisible = !p.isVisible;
-            saveToLocal(); // 同步儲存
+            saveToLocal();
             window.render();
         };
 
         window.deletePhone = function(id) {
             phones = phones.filter(p => p.id !== id);
-            saveToLocal(); // 同步儲存
+            saveToLocal();
             window.render();
         };
 
@@ -464,7 +473,7 @@
                 strengths: ['value'],
                 specs: { display: '6.7 吋', camera: '48MP', battery: '5000mAh' }
             });
-            saveToLocal(); // 同步儲存
+            saveToLocal();
             window.render();
         };
 
@@ -473,6 +482,37 @@
             state.isFinished = false;
             state.selections = { condition: '', budget: '', os: '', priority: '' };
             window.render();
+        };
+
+        // 匯出/匯入邏輯
+        window.exportData = function() {
+            const dataStr = JSON.stringify(phones);
+            const encoded = btoa(encodeURIComponent(dataStr));
+            // 嘗試複製到剪貼簿
+            const tempInput = document.createElement("input");
+            document.body.appendChild(tempInput);
+            tempInput.value = encoded;
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            alert("設定代碼已複製！將這段代碼傳給朋友，讓他在匯入處貼上即可。");
+        };
+
+        window.importDataPrompt = function() {
+            const input = prompt("請貼上匯入代碼：");
+            if (!input) return;
+            try {
+                const decoded = decodeURIComponent(atob(input));
+                const parsed = JSON.parse(decoded);
+                if (Array.isArray(parsed)) {
+                    phones = parsed;
+                    saveToLocal();
+                    window.render();
+                    alert("匯入成功！設定已更新。");
+                }
+            } catch (e) {
+                alert("代碼錯誤，請確保代碼完整。");
+            }
         };
 
         function initDragAndDrop() {
@@ -502,7 +542,7 @@
                         return phones[idx];
                     });
                     phones = newOrder;
-                    saveToLocal(); // 同步儲存順序
+                    saveToLocal();
                     window.render();
                 });
             });
