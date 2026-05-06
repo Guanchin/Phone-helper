@@ -7,23 +7,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', 'Noto Sans TC', sans-serif; -webkit-font-smoothing: antialiased; }
+        body { font-family: 'Inter', 'Noto Sans TC', sans-serif; -webkit-font-smoothing: antialiased; scroll-behavior: auto !important; }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .dragging { opacity: 0.5; background: #eff6ff !important; border: 2px dashed #3b82f6 !important; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 overflow-x-hidden min-h-screen">
 
     <div id="app" class="max-w-4xl mx-auto p-4 md:p-8 flex flex-col items-center justify-center min-h-screen relative">
-        <!-- 內容將由 JavaScript 動態渲染 -->
+        <!-- 內容由 JavaScript 動態生成 -->
     </div>
 
-    <!-- 腳本邏輯 -->
     <script>
         // 原始資料庫 (32款機型)
         let phones = [
@@ -61,7 +60,6 @@
             { id: 3010, name: "Vivo Y300 Pro", brand: "Vivo", os: "Android", price: 10900, condition: "new", isVisible: true, strengths: ["battery"], description: "6500mAh 續航怪獸。", specs: { display: "6.7 吋", camera: "50MP", battery: "6500mAh" } }
         ];
 
-        // 應用程式狀態
         let state = {
             currentStep: 0,
             selections: { condition: '', budget: '', os: '', priority: '' },
@@ -96,30 +94,28 @@
             ]}
         ];
 
-        // 核心渲染函式 (帶捲動記憶)
         function render() {
-            // 記錄目前的捲動高度
-            const scrollPos = window.pageYOffset || document.documentElement.scrollTop;
-            const adminList = document.getElementById('admin-list');
-            const adminScrollPos = adminList ? adminList.scrollTop : 0;
+            // 記憶目前捲動高度
+            const pageY = window.pageYOffset || document.documentElement.scrollTop;
+            const adminListEl = document.getElementById('admin-list');
+            const adminScrollY = adminListEl ? adminListEl.scrollTop : 0;
 
             const root = document.getElementById('app');
             root.innerHTML = '';
 
             if (state.isAdmin) {
                 renderAdmin(root);
-                // 恢復後台列表的捲動高度
                 const newAdminList = document.getElementById('admin-list');
-                if (newAdminList) newAdminList.scrollTop = adminScrollPos;
+                if (newAdminList) newAdminList.scrollTop = adminScrollY;
             } else {
-                renderUserInterface(root);
+                renderUserUI(root);
             }
 
-            // 恢復整頁的捲動高度
-            window.scrollTo(0, scrollPos);
+            // 恢復捲動高度
+            window.scrollTo(0, pageY);
         }
 
-        function renderUserInterface(root) {
+        function renderUserUI(root) {
             const header = document.createElement('header');
             header.className = 'relative text-center mb-10 w-full';
             header.innerHTML = `
@@ -137,7 +133,7 @@
             main.className = 'bg-white w-full rounded-[48px] shadow-2xl border border-slate-100 overflow-hidden min-h-[580px] flex flex-col fade-in';
             
             if (!state.isFinished) {
-                const currentStepData = STEPS[state.currentStep];
+                const step = STEPS[state.currentStep];
                 main.innerHTML = `
                     <div class="p-8 md:p-12 flex-1 flex flex-col">
                         <div class="flex justify-between items-center mb-12">
@@ -147,12 +143,12 @@
                             <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">STEP ${state.currentStep + 1}/4</span>
                         </div>
                         <div class="mb-12 text-center md:text-left">
-                            <h2 class="text-3xl font-black mb-3 text-slate-800 leading-tight">${currentStepData.title}</h2>
-                            <p class="text-slate-400 text-sm font-medium leading-relaxed">${currentStepData.description || ''}</p>
+                            <h2 class="text-3xl font-black mb-3 text-slate-800 leading-tight">${step.title}</h2>
+                            <p class="text-slate-400 text-sm font-medium leading-relaxed">${step.description || ''}</p>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
-                            ${currentStepData.options.map(opt => `
-                                <button type="button" onclick="selectOption('${currentStepData.id}', '${opt.value}')" class="p-7 text-left rounded-[32px] border-2 transition-all group flex items-center gap-6 border-slate-50 hover:border-blue-500 hover:bg-blue-50/30 active:scale-95 shadow-sm">
+                            ${step.options.map(opt => `
+                                <button type="button" onclick="selectOption('${step.id}', '${opt.value}')" class="p-7 text-left rounded-[32px] border-2 transition-all group flex items-center gap-6 border-slate-50 hover:border-blue-500 hover:bg-blue-50/30 active:scale-95 shadow-sm">
                                     <div class="p-4 rounded-2xl bg-slate-50 text-slate-400 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
                                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${opt.icon}"></path></svg>
                                     </div>
@@ -213,7 +209,7 @@
                                             <span class="px-3 py-1 bg-slate-100 text-slate-400 text-[9px] font-black rounded-lg uppercase tracking-widest">${p.brand}</span>
                                             ${i === 0 ? '<span class="px-3 py-1 bg-blue-600 text-white text-[9px] font-black rounded-lg flex items-center gap-1.5 uppercase tracking-widest shadow-md">編輯首選</span>' : ''}
                                         </div>
-                                        <h3 class="text-2xl font-black mb-2 text-slate-800 tracking-tight break-words whitespace-normal">${p.name}</h3>
+                                        <h3 class="text-2xl font-black mb-2 text-slate-800 tracking-tight break-words whitespace-normal leading-tight">${p.name}</h3>
                                         <p class="text-slate-500 text-sm mb-6 leading-relaxed font-bold break-words whitespace-normal">${p.description}</p>
                                         <div class="flex flex-wrap gap-5 text-[10px] text-slate-400 font-black tracking-widest uppercase">
                                             <span class="flex items-center gap-2 min-w-0"><svg class="w-4 h-4 shrink-0 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg><span class="break-words">${p.specs.display}</span></span>
@@ -286,8 +282,8 @@
             const visibleCount = phones.filter(p => p.isVisible).length;
             root.innerHTML = `
                 <div class="w-full flex flex-col gap-6 tracking-tight">
-                    <div class="flex items-center justify-between bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
-                        <div class="flex items-center gap-4 min-w-0 pr-4 flex-1">
+                    <div class="flex items-center justify-between bg-white p-6 rounded-3xl shadow-sm border border-slate-200 gap-4">
+                        <div class="flex items-center gap-4 min-w-0 flex-1">
                             <div class="p-3 bg-blue-600 text-white rounded-2xl shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div>
                             <div class="min-w-0 flex-1">
                                 <h1 class="text-2xl font-black text-slate-800 break-words whitespace-normal leading-tight">後台管理面板</h1>
@@ -388,17 +384,18 @@
             `;
         }
 
-        // 行政操作邏輯
+        // 行政邏輯
         function enterAdmin() { state.isAdmin = true; state.showInventory = false; render(); }
         function exitAdmin() { state.isAdmin = false; render(); }
         function setEditing(id) { state.editingId = id; render(); }
         
         function saveEdit(id) {
             const p = phones.find(x => x.id === id);
+            if (!p) return;
             p.name = document.getElementById(`edit-name-${id}`).value;
             p.brand = document.getElementById(`edit-brand-${id}`).value;
             p.condition = document.getElementById(`edit-cond-${id}`).value;
-            p.price = parseInt(document.getElementById(`edit-price-${id}`).value);
+            p.price = parseInt(document.getElementById(`edit-price-${id}`).value) || 0;
             p.description = document.getElementById(`edit-desc-${id}`).value;
             state.editingId = null;
             render();
@@ -406,12 +403,22 @@
 
         function togglePhoneVisibility(id) {
             const p = phones.find(x => x.id === id);
-            p.isVisible = !p.isVisible;
+            if (p) p.isVisible = !p.isVisible;
             render();
         }
 
         function deletePhone(id) {
             phones = phones.filter(p => p.id !== id);
+            render();
+        }
+
+        function selectOption(stepId, value) {
+            state.selections[stepId] = value;
+            if (state.currentStep < STEPS.length - 1) {
+                state.currentStep++;
+            } else {
+                state.isFinished = true;
+            }
             render();
         }
 
@@ -431,6 +438,10 @@
                 strengths: ['value'],
                 specs: { display: '6.7 吋', camera: '48MP', battery: '5000mAh' }
             });
+            // 重置表單
+            document.getElementById('new-name').value = '';
+            document.getElementById('new-price').value = '';
+            document.getElementById('new-desc').value = '';
             render();
         }
 
@@ -441,7 +452,7 @@
             render();
         }
 
-        // 拖拽排序
+        // 排序
         function initDragAndDrop() {
             const list = document.getElementById('admin-list');
             if (!list) return;
