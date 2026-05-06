@@ -25,7 +25,7 @@
 
     <!-- 腳本邏輯 -->
     <script>
-        // 原始資料庫
+        // 原始資料庫 (32款機型)
         let phones = [
             { id: 1701, name: "iPhone 17 Pro Max", brand: "Apple", os: "iOS", price: 49900, condition: "new", isVisible: true, strengths: ["photography", "gaming", "battery"], description: "2026 頂規機皇，鈦金屬 2.0 與全新 24MP 前鏡頭。", specs: { display: "6.9 吋 OLED", camera: "48MP 四鏡頭", battery: "續航王者" } },
             { id: 1702, name: "iPhone 17 Pro", brand: "Apple", os: "iOS", price: 43900, condition: "new", isVisible: true, strengths: ["photography", "portability"], description: "最強性能的小鋼炮，搭載 A19 Pro 晶片。", specs: { display: "6.3 吋 OLED", camera: "48MP 三鏡頭", battery: "全天候" } },
@@ -35,7 +35,7 @@
             { id: 1601, name: "iPhone 16 Pro Max (二手)", brand: "Apple", os: "iOS", price: 26500, condition: "used", isVisible: true, strengths: ["photography", "battery"], description: "前代大螢幕機皇，二手行情極佳。", specs: { display: "6.9 吋", camera: "48MP 三鏡", battery: "長效" } },
             { id: 1602, name: "iPhone 16 Pro (二手)", brand: "Apple", os: "iOS", price: 22500, condition: "used", isVisible: true, strengths: ["photography", "portability"], description: "具備動作按鈕與強悍效能。", specs: { display: "6.3 吋", camera: "48MP 三鏡", battery: "全天" } },
             { id: 1603, name: "iPhone 16 Plus (二手)", brand: "Apple", os: "iOS", price: 18500, condition: "used", isVisible: true, strengths: ["battery"], description: "最後一隻 Plus 機型，電力表現優異。", specs: { display: "6.7 吋", camera: "48MP 雙鏡", battery: "極長續航" } },
-            { id: 1604, name: "iPhone 16 (二手)", brand: "Apple", os: "iOS", price: 16500, condition: "used", isVisible: true, strengths: ["value"], description: "基礎動作按鈕款。", specs: { display: "6.1 吋", camera: "48MP", battery: "穩定" } },
+            { id: 1604, name: "iPhone 16 (二手)", brand: "Apple", os: "iOS", price: 16500, condition: "used", isVisible: true, strengths: ["value", "portability"], description: "基礎動作按鈕款。", specs: { display: "6.1 吋", camera: "48MP", battery: "穩定" } },
             { id: 1501, name: "iPhone 15 Pro Max (二手)", brand: "Apple", os: "iOS", price: 21500, condition: "used", isVisible: true, strengths: ["photography"], description: "首款鈦金屬與 USB-C。", specs: { display: "6.7 吋", camera: "5倍光變", battery: "穩定" } },
             { id: 1504, name: "iPhone 15 Pro (二手)", brand: "Apple", os: "iOS", price: 18500, condition: "used", isVisible: true, strengths: ["portability"], description: "高效能 Pro 二手機選。", specs: { display: "6.1 吋", camera: "三鏡頭", battery: "足夠" } },
             { id: 1502, name: "iPhone 15 Plus (二手)", brand: "Apple", os: "iOS", price: 14500, condition: "used", isVisible: true, strengths: ["battery"], description: "實惠大螢幕選。", specs: { display: "6.7 吋", camera: "48MP", battery: "長效" } },
@@ -110,7 +110,7 @@
             const header = document.createElement('header');
             header.className = 'relative text-center mb-10 w-full';
             header.innerHTML = `
-                <button onclick="toggleInventory(true)" class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 rounded-[20px] text-[11px] font-black text-slate-500 hover:text-blue-600 hover:border-blue-200 transition-all active:scale-95 shadow-sm">
+                <button type="button" onclick="toggleInventory(true)" class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 rounded-[20px] text-[11px] font-black text-slate-500 hover:text-blue-600 hover:border-blue-200 transition-all active:scale-95 shadow-sm">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg> 瀏覽完整清單
                 </button>
                 <h1 class="text-4xl md:text-5xl font-black text-blue-600 mb-2 flex items-center justify-center gap-3 tracking-tighter">
@@ -140,7 +140,7 @@
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
                             ${currentStepData.options.map(opt => `
-                                <button onclick="selectOption('${currentStepData.id}', '${opt.value}')" class="p-7 text-left rounded-[32px] border-2 transition-all group flex items-center gap-6 border-slate-50 hover:border-blue-500 hover:bg-blue-50/30 active:scale-95 shadow-sm">
+                                <button type="button" onclick="selectOption('${currentStepData.id}', '${opt.value}')" class="p-7 text-left rounded-[32px] border-2 transition-all group flex items-center gap-6 border-slate-50 hover:border-blue-500 hover:bg-blue-50/30 active:scale-95 shadow-sm">
                                     <div class="p-4 rounded-2xl bg-slate-50 text-slate-400 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
                                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${opt.icon}"></path></svg>
                                     </div>
@@ -151,7 +151,7 @@
                             `).join('')}
                         </div>
                         <div class="mt-8 pt-8 border-t border-slate-50">
-                            <button onclick="goBack()" ${state.currentStep === 0 ? 'disabled' : ''} class="flex items-center gap-2 px-6 py-2.5 rounded-[20px] text-xs font-black transition-all ${state.currentStep === 0 ? 'text-slate-100' : 'text-slate-400 hover:text-blue-600 hover:bg-blue-50'}">
+                            <button type="button" onclick="goBack()" ${state.currentStep === 0 ? 'disabled' : ''} class="flex items-center gap-2 px-6 py-2.5 rounded-[20px] text-xs font-black transition-all ${state.currentStep === 0 ? 'text-slate-100' : 'text-slate-400 hover:text-blue-600 hover:bg-blue-50'}">
                                 ← 上一步
                             </button>
                         </div>
@@ -208,11 +208,11 @@
             container.innerHTML = `
                 <div class="p-8 md:p-12 flex-1 flex flex-col">
                     <div class="flex items-center justify-between mb-10 pb-6 border-b border-slate-50">
-                        <div>
+                        <div class="flex-1 min-w-0 pr-4">
                             <h2 class="text-3xl font-black text-slate-800 tracking-tight">推薦結果</h2>
                             <p class="text-slate-400 text-[11px] font-black mt-1 uppercase tracking-[0.2em]">根據庫存順序與需求即時匹配</p>
                         </div>
-                        <button onclick="resetApp()" class="p-4 text-slate-200 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all shadow-sm">
+                        <button type="button" onclick="resetApp()" class="p-4 text-slate-200 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all shadow-sm">
                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                         </button>
                     </div>
@@ -220,24 +220,24 @@
                         ${filtered.length > 0 ? filtered.map((p, i) => `
                             <div class="p-8 border-2 rounded-[40px] transition-all hover:shadow-2xl ${i === 0 ? 'border-blue-600 ring-8 ring-blue-50 bg-white shadow-xl' : 'border-slate-50 bg-white'}">
                                 <div class="flex flex-col md:flex-row gap-8">
-                                    <div class="flex-1">
+                                    <div class="flex-1 min-w-0">
                                         <div class="flex items-center gap-2 mb-4">
                                             <span class="px-3 py-1 text-[9px] font-black rounded-lg uppercase tracking-widest ${p.condition === 'new' ? 'bg-emerald-100 text-emerald-700' : 'bg-orange-100 text-orange-700'}">${p.condition === 'new' ? '全新機' : '二手福利'}</span>
                                             <span class="px-3 py-1 bg-slate-100 text-slate-400 text-[9px] font-black rounded-lg uppercase tracking-widest">${p.brand}</span>
                                             ${i === 0 ? '<span class="px-3 py-1 bg-blue-600 text-white text-[9px] font-black rounded-lg flex items-center gap-1.5 uppercase tracking-widest shadow-md">編輯首選</span>' : ''}
                                         </div>
-                                        <h3 class="text-2xl font-black mb-2 text-slate-800 tracking-tight">${p.name}</h3>
-                                        <p class="text-slate-500 text-sm mb-6 leading-relaxed font-bold">${p.description}</p>
+                                        <h3 class="text-2xl font-black mb-2 text-slate-800 tracking-tight break-words whitespace-normal">${p.name}</h3>
+                                        <p class="text-slate-500 text-sm mb-6 leading-relaxed font-bold break-words whitespace-normal">${p.description}</p>
                                         <div class="flex flex-wrap gap-5 text-[10px] text-slate-400 font-black tracking-widest uppercase">
-                                            <span class="flex items-center gap-2"><svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>${p.specs.display}</span>
-                                            <span class="flex items-center gap-2"><svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>${p.specs.camera}</span>
-                                            <span class="flex items-center gap-2"><svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>${p.specs.battery}</span>
+                                            <span class="flex items-center gap-2 min-w-0"><svg class="w-4 h-4 shrink-0 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg><span class="break-words">${p.specs.display}</span></span>
+                                            <span class="flex items-center gap-2 min-w-0"><svg class="w-4 h-4 shrink-0 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg><span class="break-words">${p.specs.camera}</span></span>
+                                            <span class="flex items-center gap-2 min-w-0"><svg class="w-4 h-4 shrink-0 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg><span class="break-words">${p.specs.battery}</span></span>
                                         </div>
                                     </div>
-                                    <div class="md:w-56 flex flex-col justify-center items-center md:items-end border-t md:border-t-0 md:border-l border-slate-50 pt-6 md:pt-0 md:pl-10">
+                                    <div class="md:w-56 flex flex-col justify-center items-center md:items-end border-t md:border-t-0 md:border-l border-slate-100 pt-6 md:pt-0 md:pl-10 shrink-0">
                                         <div class="text-[10px] text-slate-300 font-black uppercase mb-1 tracking-widest">2026 行情價</div>
                                         <div class="text-4xl font-black text-blue-600 mb-6 tracking-tighter">NT$ ${p.price.toLocaleString()}</div>
-                                        <button class="w-full bg-slate-900 text-white px-6 py-4 rounded-[24px] text-xs font-black hover:bg-blue-600 shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-2">門市現貨查詢</button>
+                                        <button type="button" class="w-full bg-slate-900 text-white px-6 py-4 rounded-[24px] text-xs font-black hover:bg-blue-600 shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-2">門市現貨查詢</button>
                                     </div>
                                 </div>
                             </div>
@@ -264,7 +264,7 @@
                             <div class="p-2.5 bg-blue-50 text-blue-600 rounded-2xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></div>
                             <h3 class="text-2xl font-black text-slate-800">手機庫存清單 (${visiblePhones.length} 款)</h3>
                         </div>
-                        <button onclick="toggleInventory(false)" class="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                        <button type="button" onclick="toggleInventory(false)" class="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
                     </div>
                     <div class="p-8 overflow-y-auto flex-1 custom-scrollbar space-y-8 bg-slate-50/30">
                         ${['Apple', 'Samsung', 'Vivo'].map(brand => `
@@ -272,12 +272,12 @@
                                 <h4 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4 border-b pb-2">${brand} Series</h4>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                                     ${phones.filter(p => p.brand === brand && p.isVisible).map(p => `
-                                        <div class="flex items-center justify-between p-4 bg-white rounded-[24px] shadow-sm border border-slate-100">
-                                            <div class="min-w-0">
-                                                <div class="font-bold text-slate-800 text-sm truncate">${p.name}</div>
-                                                <div class="text-[9px] font-black tracking-wider ${p.condition === 'new' ? 'text-emerald-500' : 'text-orange-500'}">${p.condition.toUpperCase()}</div>
+                                        <div class="flex items-center justify-between p-4 bg-white rounded-[24px] shadow-sm border border-slate-100 gap-3">
+                                            <div class="min-w-0 flex-1">
+                                                <div class="font-bold text-slate-800 text-sm break-words whitespace-normal leading-tight">${p.name}</div>
+                                                <div class="text-[9px] font-black tracking-wider ${p.condition === 'new' ? 'text-emerald-500' : 'text-orange-500'} mt-1">${p.condition.toUpperCase()}</div>
                                             </div>
-                                            <div class="text-blue-600 font-black text-sm">NT$${p.price.toLocaleString()}</div>
+                                            <div class="text-blue-600 font-black text-sm whitespace-nowrap shrink-0">NT$${p.price.toLocaleString()}</div>
                                         </div>
                                     `).join('')}
                                 </div>
@@ -285,7 +285,7 @@
                         `).join('')}
                     </div>
                     <div class="p-8 bg-white border-t border-slate-100">
-                        <button onclick="enterAdmin()" class="w-full flex items-center justify-center gap-3 py-5 bg-slate-900 text-white rounded-[24px] font-black hover:bg-blue-600 transition-all shadow-2xl">
+                        <button type="button" onclick="enterAdmin()" class="w-full flex items-center justify-center gap-3 py-5 bg-slate-900 text-white rounded-[24px] font-black hover:bg-blue-600 transition-all shadow-2xl">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                             進入管理後台
                         </button>
@@ -300,14 +300,14 @@
             root.innerHTML = `
                 <div class="w-full flex flex-col gap-6 tracking-tight">
                     <div class="flex items-center justify-between bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
-                        <div class="flex items-center gap-4">
-                            <div class="p-3 bg-blue-600 text-white rounded-2xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div>
-                            <div>
-                                <h1 class="text-2xl font-black text-slate-800">後台管理面板</h1>
-                                <p class="text-slate-400 text-xs font-bold uppercase">Dynamic Inventory Admin</p>
+                        <div class="flex items-center gap-4 min-w-0 pr-4">
+                            <div class="p-3 bg-blue-600 text-white rounded-2xl shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div>
+                            <div class="min-w-0">
+                                <h1 class="text-2xl font-black text-slate-800 truncate">後台管理面板</h1>
+                                <p class="text-slate-400 text-xs font-bold uppercase truncate">Inventory Management</p>
                             </div>
                         </div>
-                        <button onclick="exitAdmin()" class="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-2xl text-sm font-black hover:bg-blue-600 transition-all shadow-xl">返回助手前台</button>
+                        <button type="button" onclick="exitAdmin()" class="shrink-0 flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-2xl text-sm font-black hover:bg-blue-600 transition-all shadow-xl">返回助手前台</button>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -326,13 +326,13 @@
                                 </div>
                                 <input id="new-price" type="number" placeholder="價格" class="w-full bg-slate-50 border-none rounded-xl p-3 font-bold text-blue-600 text-sm">
                                 <textarea id="new-desc" placeholder="描述" class="w-full bg-slate-50 border-none rounded-xl p-3 font-bold min-h-[80px] text-sm"></textarea>
-                                <button onclick="addNewPhone()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black shadow-lg">確認加入</button>
+                                <button type="button" onclick="addNewPhone()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black shadow-lg">確認加入</button>
                             </div>
                         </div>
 
                         <!-- Phone List -->
                         <div class="lg:col-span-2 bg-white p-6 rounded-[32px] shadow-sm border border-slate-200">
-                            <h2 class="text-lg font-black text-slate-800 mb-6">資料庫管理 (${phones.length}款機型，目前顯示：${visibleCount}台)</h2>
+                            <h2 class="text-lg font-black text-slate-800 mb-6 break-words whitespace-normal leading-tight">資料庫管理 (${phones.length}款機型，目前顯示：${visibleCount}台)</h2>
                             <div id="admin-list" class="space-y-3 max-h-[750px] overflow-y-auto pr-2 custom-scrollbar">
                                 ${phones.map((p, index) => renderAdminItem(p, index)).join('')}
                             </div>
@@ -355,8 +355,8 @@
                     ${isEditing ? `
                         <div class="space-y-3">
                             <div class="flex items-center justify-between">
-                                <span class="text-[10px] font-black text-blue-600 uppercase">編輯模式中...</span>
-                                <button onclick="saveEdit(${p.id})" class="p-2 bg-blue-600 text-white rounded-xl text-xs font-bold px-4">儲存</button>
+                                <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest">編輯模式中...</span>
+                                <button type="button" onclick="saveEdit(${p.id})" class="p-2 bg-blue-600 text-white rounded-xl text-xs font-bold px-4">儲存</button>
                             </div>
                             <div class="grid grid-cols-2 gap-3">
                                 <input id="edit-name-${p.id}" type="text" value="${p.name}" class="w-full bg-white rounded-xl p-2.5 text-sm font-bold border">
@@ -379,21 +379,21 @@
                         </div>
                     ` : `
                         <div class="flex items-center gap-4">
-                            <div class="text-slate-300 drag-handle"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M7 7h2v2H7V7zm0 4h2v2H7v-2zm0 4h2v2H7v-2zm4-8h2v2h-2V7zm0 4h2v2h-2v-2zm0 4h2v2h-2v-2z"></path></svg></div>
-                            <div class="p-3 rounded-2xl ${p.condition === 'new' ? 'bg-emerald-100 text-emerald-600' : 'bg-orange-100 text-orange-600'}">
+                            <div class="text-slate-300 drag-handle shrink-0"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M7 7h2v2H7V7zm0 4h2v2H7v-2zm0 4h2v2H7v-2zm4-8h2v2h-2V7zm0 4h2v2h-2v-2zm0 4h2v2h-2v-2z"></path></svg></div>
+                            <div class="p-3 rounded-2xl shrink-0 ${p.condition === 'new' ? 'bg-emerald-100 text-emerald-600' : 'bg-orange-100 text-orange-600'}">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <div class="font-black text-slate-800 text-base truncate">${p.name}</div>
-                                <div class="text-[10px] text-slate-400 font-bold uppercase flex gap-2">
+                                <div class="font-black text-slate-800 text-base break-words whitespace-normal leading-tight">${p.name}</div>
+                                <div class="text-[10px] text-slate-400 font-bold uppercase flex flex-wrap gap-2 mt-1">
                                     <span>${p.brand}</span> • <span>${p.condition === 'new' ? '全新' : '二手'}</span> • <span>NT$ ${p.price.toLocaleString()}</span>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-1">
-                                <button onclick="togglePhoneVisibility(${p.id})" class="p-2.5 rounded-xl ${p.isVisible ? 'text-blue-500 hover:bg-blue-100' : 'text-red-500 bg-red-100'}">
+                            <div class="flex items-center gap-1 shrink-0">
+                                <button type="button" onclick="togglePhoneVisibility(${p.id})" class="p-2.5 rounded-xl transition-all ${p.isVisible ? 'text-blue-500 hover:bg-blue-100' : 'text-red-500 bg-red-100'}">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${p.isVisible ? 'M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z' : 'M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18'}"></path></svg>
                                 </button>
-                                <button onclick="deletePhone(${p.id})" class="p-2.5 text-slate-300 hover:text-white hover:bg-red-500 rounded-xl transition-all">
+                                <button type="button" onclick="deletePhone(${p.id})" class="p-2.5 text-slate-300 hover:text-white hover:bg-red-500 rounded-xl transition-all">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                 </button>
                             </div>
@@ -407,6 +407,7 @@
         function enterAdmin() { state.isAdmin = true; state.showInventory = false; render(); }
         function exitAdmin() { state.isAdmin = false; render(); }
         function setEditing(id) { state.editingId = id; render(); }
+        
         function saveEdit(id) {
             const p = phones.find(x => x.id === id);
             p.name = document.getElementById(`edit-name-${id}`).value;
@@ -417,15 +418,18 @@
             state.editingId = null;
             render();
         }
+
         function togglePhoneVisibility(id) {
             const p = phones.find(x => x.id === id);
             p.isVisible = !p.isVisible;
             render();
         }
+
         function deletePhone(id) {
             phones = phones.filter(p => p.id !== id);
             render();
         }
+
         function addNewPhone() {
             const name = document.getElementById('new-name').value;
             const price = parseInt(document.getElementById('new-price').value);
@@ -444,6 +448,7 @@
             });
             render();
         }
+
         function resetApp() {
             state.currentStep = 0;
             state.isFinished = false;
@@ -454,12 +459,14 @@
         // 拖拽排序邏輯
         function initDragAndDrop() {
             const list = document.getElementById('admin-list');
+            if (!list) return;
             const items = list.querySelectorAll('[draggable="true"]');
             
             items.forEach(item => {
                 item.addEventListener('dragstart', (e) => {
                     state.draggedIndex = parseInt(item.getAttribute('data-index'));
                     item.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
                 });
                 item.addEventListener('dragend', () => {
                     item.classList.remove('dragging');
@@ -468,13 +475,16 @@
                     e.preventDefault();
                     const afterElement = getDragAfterElement(list, e.clientY);
                     const draggingItem = document.querySelector('.dragging');
-                    if (afterElement == null) {
-                        list.appendChild(draggingItem);
-                    } else {
-                        list.insertBefore(draggingItem, afterElement);
+                    if (draggingItem) {
+                        if (afterElement == null) {
+                            list.appendChild(draggingItem);
+                        } else {
+                            list.insertBefore(draggingItem, afterElement);
+                        }
                     }
                 });
-                item.addEventListener('drop', () => {
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
                     const newOrder = Array.from(list.children).map(el => {
                         const idx = parseInt(el.getAttribute('data-index'));
                         return phones[idx];
